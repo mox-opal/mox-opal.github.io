@@ -1,0 +1,481 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+#1.1: Load the dataset and display the first 10 rows w/ summary
+
+```{r}
+
+library(conflicted)
+library(tidyverse)
+library(tidytext)
+library(lubridate)
+library(ggplot2)
+library(wordcloud)
+library(RColorBrewer)
+library(scales)
+library(igraph)
+library(ggraph)
+library(tm)
+library(e1071)
+library(caret)
+library(reshape2)
+
+conflicts_prefer(dplyr::filter)
+
+df <- read.csv("twitter_sentiment_data.csv", stringsAsFactors = FALSE)
+
+cat("Column names:\n")
+print(names(df))
+
+cat("\nStructure (first 10 rows):\n")
+print(head(df, 10))
+
+cat("\nSummary:\n")
+print(summary(df))
+
+```
+
+#1.2: Report the detected columns in the dataset
+
+```{r}
+
+guess_text_col <- function(cols) {
+  candidates <- c("text", "tweet", "content", "body", "message")
+  found <- intersect(candidates, cols)
+  if (length(found) > 0) return(found[1])
+  return(NULL)
+}
+
+guess_sentiment_col <- function(cols) {
+  candidates <- c("sentiment", "label", "sentiment_label", "polarity")
+  found <- intersect(candidates, cols)
+  if (length(found) > 0) return(found[1])
+  return(NULL)
+}
+
+text_col      <- guess_text_col(names(df))
+sentiment_col <- guess_sentiment_col(names(df))
+
+cat("Detected text column:", text_col, "\n")
+cat("Detected sentiment column:", sentiment_col, "\n")
+
+```
+
+#2.1 Cleaning and basic setups using the detected columns
+
+```{r}
+
+if (is.null(text_col)) {
+  stop("No text column detected. Please set text_col manually.")
+}
+
+clean_tweets <- function(data, text_col) {
+  data %>%
+    mutate(
+      text_clean = .data[[text_col]] %>%
+        tolower() %>%
+        gsub("http[s]?://\\S+", " ", .) %>%
+        gsub("@\\w+", " ", .) %>%
+        gsub("#", " ", .) %>%
+        gsub("[^a-z0-9\\s]", " ", .) %>%
+        gsub("\\s+", " ", .) %>%
+        trimws()
+    )
+}
+
+df <- clean_tweets(df, text_col)
+
+data("stop_words")
+
+make_wordcloud <- function(tokens_df, n_max = 150, min_freq = 3, title = "") {
+  freq <- tokens_df %>%
+    count(word, sort = TRUE) %>%
+    filter(n >= min_freq) %>%
+    slice_max(order_by = n, n = n_max)
+
+  if (nrow(freq) == 0) {
+    message("No words to display for: ", title)
+    return(invisible(NULL))
+  }
+
+  set.seed(123)
+  wordcloud(
+    words       = freq$word,
+    freq        = freq$n,
+    scale       = c(4, 0.7),
+    max.words   = n_max,
+    random.order= FALSE,
+    rot.per     = 0.2,
+    colors      = brewer.pal(8, "Dark2")
+  )
+  title(main = title)
+}
+
+```
+
+#2.2 Justify word cloud generation by constructing a helper function
+
+```{r}
+
+make_wordcloud <- function(tokens_df,
+                           n_max   = 200,      
+                           min_freq = 1,       
+                           title   = "") {
+
+  if (nrow(tokens_df) == 0) {
+    message("No tokens available for: ", title)
+    return(invisible(NULL))
+  }
+
+  freq <- tokens_df %>%
+    dplyr::filter(!is.na(word), word != "") %>%
+    count(word, sort = TRUE) %>%
+    dplyr::filter(n >= min_freq, is.finite(n)) %>%
+    slice_max(order_by = n, n = n_max)
+
+  if (nrow(freq) == 0) {
+    message("No words left after filtering for: ", title)
+    return(invisible(NULL))
+  }
+
+  set.seed(123)
+  suppressWarnings(  
+    wordcloud(
+      words        = freq$word,
+      freq         = freq$n,
+      scale        = c(3.5, 0.4),  
+      max.words    = n_max,
+      random.order = FALSE,
+      rot.per      = 0.2,
+      colors       = brewer.pal(8, "Dark2")
+    )
+  )
+  title(main = title)
+}
+
+```
+
+#3.1 Generating word cloud
+
+```{r}
+
+df_topics <- df %>%
+  mutate(
+    text_clean = ifelse(is.na(text_clean), "", text_clean),
+    topic_media_doc = str_detect(text_clean,
+      "before the flood|leonardo dicaprio|dicaprio|film|documentary"),
+    topic_politics  = str_detect(text_clean,
+      "trump|clinton|president|republican|democrat|policy|vote|election|government"),
+    topic_science   = str_detect(text_clean,
+      "data|research|scientist|evidence|temperature|co2|emission|ipcc|study"),
+    topic_solutions = str_detect(text_clean,
+      "renewable|solar|wind|innovation|technology|solutions?|mitigation|adaptation")
+  )
+
+tokens_media <- df_topics %>%
+  dplyr::filter(topic_media_doc) %>%
+  unnest_tokens(word, text_clean) %>%
+  dplyr::filter(!is.na(word), word != "") %>%
+  anti_join(stop_words, by = "word")
+
+tokens_non_media <- df_topics %>%
+  dplyr::filter(!topic_media_doc) %>%
+  unnest_tokens(word, text_clean) %>%
+  dplyr::filter(!is.na(word), word != "") %>%
+  anti_join(stop_words, by = "word")
+
+par(mfrow = c(1, 2))
+make_wordcloud(tokens_media,     title = "Media/Documentary-related tweets")
+make_wordcloud(tokens_non_media, title = "Non-media tweets")
+par(mfrow = c(1, 1))
+
+tokens_politics <- df_topics %>%
+  dplyr::filter(topic_politics) %>%
+  unnest_tokens(word, text_clean) %>%
+  dplyr::filter(!is.na(word), word != "") %>%
+  anti_join(stop_words, by = "word")
+
+tokens_science <- df_topics %>%
+  dplyr::filter(topic_science) %>%
+  unnest_tokens(word, text_clean) %>%
+  dplyr::filter(!is.na(word), word != "") %>%
+  anti_join(stop_words, by = "word")
+
+par(mfrow = c(1, 2))
+make_wordcloud(tokens_politics, title = "Political discourse")
+
+make_wordcloud(tokens_science,  title = "Scientific discourse")
+par(mfrow = c(1, 1))
+
+```
+
+#3.2 Comparing the message (cross-sentiment analysis)
+
+```{r}
+
+if (!is.null(sentiment_col)) {
+  sent_vals <- df[[sentiment_col]]
+  if (is.numeric(sent_vals)) {
+    df$sentiment_num <- sent_vals
+  } else {
+    df$sentiment_num <- as.numeric(as.factor(sent_vals)) - 1
+  }
+
+  df <- df %>%
+    mutate(
+      sentiment_cat = case_when(
+        sentiment_num %in% c(0)         ~ "Negative",
+        sentiment_num %in% c(1)         ~ "Neutral",
+        sentiment_num %in% c(2, 3, 4)   ~ "Positive",
+        TRUE                            ~ "Other"
+      )
+    )
+
+  df_cross <- df %>%
+    mutate(
+      has_problem = str_detect(text_clean,
+        "melting|flood|drought|disaster|extinction|crisis|catastrophe"),
+      has_solution = str_detect(text_clean,
+        "renewable|solar|wind|policy|tax|regulation|solution|innovation")
+    )
+
+  tokens_pos_solution <- df_cross %>%
+    filter(sentiment_cat == "Positive", has_solution) %>%
+    unnest_tokens(word, text_clean) %>%
+    anti_join(stop_words, by = "word")
+
+  tokens_neg_problem <- df_cross %>%
+    filter(sentiment_cat == "Negative", has_problem) %>%
+    unnest_tokens(word, text_clean) %>%
+    anti_join(stop_words, by = "word")
+
+  par(mfrow = c(1, 2))
+  make_wordcloud(tokens_pos_solution, title = "Positive + Solutions")
+  make_wordcloud(tokens_neg_problem,  title = "Negative + Problems")
+  par(mfrow = c(1, 1))
+} else {
+  message("No sentiment column detected; skipping sentiment-based splits.")
+}
+
+```
+
+#4.1 Preparation in conducting prediction (dataset cleaning)
+
+```{r}
+
+df_ml <- df %>%
+  select(text = all_of(text_col),
+         sentiment = all_of(sentiment_col)) %>%
+  filter(!is.na(text), !is.na(sentiment))
+
+df_ml$sentiment <- as.factor(df_ml$sentiment)
+
+clean_fun <- function(x) {
+  x <- tolower(x)
+  x <- gsub("http[s]?://\\S+", " ", x)   
+  x <- gsub("@\\w+", " ", x)            
+  x <- gsub("#", " ", x)                
+  x <- gsub("[^a-z0-9\\s]", " ", x)     
+  x <- gsub("\\s+", " ", x)            
+  trimws(x)
+}
+
+df_ml$text_clean <- clean_fun(df_ml$text)
+
+set.seed(123)
+
+train_index <- createDataPartition(df_ml$sentiment, p = 0.8, list = FALSE)
+
+train_df <- df_ml[train_index, ]
+test_df  <- df_ml[-train_index, ]
+
+```
+
+#4.2 Creating a document–term matrix (DTM)
+
+```{r}
+
+train_corpus <- VCorpus(VectorSource(train_df$text_clean))
+test_corpus  <- VCorpus(VectorSource(test_df$text_clean))
+
+to_space <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
+
+train_corpus <- train_corpus %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removeWords, stopwords("en")) %>%
+  tm_map(stripWhitespace)
+
+test_corpus <- test_corpus %>%
+  tm_map(removeNumbers) %>%
+  tm_map(removeWords, stopwords("en")) %>%
+  tm_map(stripWhitespace)
+
+dtm_train <- DocumentTermMatrix(train_corpus)
+dtm_train <- removeSparseTerms(dtm_train, 0.98)  
+dtm_train
+
+dtm_test <- DocumentTermMatrix(test_corpus,
+                               list(dictionary = Terms(dtm_train)))
+
+train_matrix <- as.data.frame(as.matrix(dtm_train))
+test_matrix  <- as.data.frame(as.matrix(dtm_test))
+
+train_matrix <- train_matrix %>% setNames(make.names(names(.)))
+test_matrix  <- test_matrix  %>% setNames(make.names(names(.)))
+
+train_matrix$sentiment <- train_df$sentiment
+test_labels            <- test_df$sentiment
+
+dim(train_matrix)
+
+```
+
+#4.3 Run and train the Naive Bayes (NB) classifier
+
+```{r}
+
+set.seed(123)
+
+nb_model <- naiveBayes(
+  sentiment ~ .,
+  data = train_matrix,
+  laplace = 1
+)
+nb_model
+```
+
+#4.4 Evaluation on test set (in numerical value)
+
+```{r}
+
+pred_test <- predict(nb_model, newdata = test_matrix)
+
+conf_mat <- confusionMatrix(pred_test, test_labels)
+conf_mat
+
+```
+
+#4.5 Confusion Matrix heatmap
+
+```{r}
+
+conf_mat <- confusionMatrix(pred_test, test_labels)
+
+cm_df <- as.data.frame(conf_mat$table)
+colnames(cm_df) <- c("Reference", "Prediction", "Freq")
+ggplot(cm_df, aes(x = Reference, y = Prediction, fill = Freq)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = Freq), color = "black", size = 4) +
+  scale_fill_gradient(low = "#f7fbff", high = "#08306b") +
+  coord_equal() +
+  labs(
+    title = "Confusion Matrix (Test Set)",
+    x = "True Sentiment",
+    y = "Predicted Sentiment",
+    fill = "Count"
+  ) +
+  theme_minimal()
+
+```
+
+#4.6 Overall correctness (accuracy vs error) barplot
+
+```{r}
+
+overall_acc <- conf_mat$overall["Accuracy"]
+overall_err <- 1 - overall_acc
+
+acc_df <- data.frame(
+  Metric = c("Correct", "Incorrect"),
+  Value  = c(overall_acc, overall_err)
+)
+
+ggplot(acc_df, aes(x = Metric, y = Value, fill = Metric)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(0, 1)) +
+  scale_fill_manual(values = c("Correct" = "#2ca25f", "Incorrect" = "#de2d26")) +
+  labs(
+    title = "Overall Classification Accuracy",
+    x = NULL,
+    y = "Proportion"
+  ) +
+  theme_minimal()
+
+```
+
+#4.7 Reporting the Per-class precision / recall / F1 of the test set (in bar chart)
+
+```{r}
+
+cm <- conf_mat$table          
+classes <- colnames(cm)       
+
+metrics_list <- lapply(seq_along(classes), function(i) {
+  cls <- classes[i]
+  tp <- cm[cls, cls]
+  fp <- sum(cm[, cls]) - tp
+  fn <- sum(cm[cls, ]) - tp
+  tn <- sum(cm) - tp - fp - fn
+  precision <- if ((tp + fp) == 0) NA_real_ else tp / (tp + fp)
+  recall    <- if ((tp + fn) == 0) NA_real_ else tp / (tp + fn)
+  f1        <- if (is.na(precision) || is.na(recall) || (precision + recall) == 0) {
+    NA_real_
+  } else {
+    2 * precision * recall / (precision + recall)
+  }
+  data.frame(
+    Class     = cls,
+    Precision = precision,
+    Recall    = recall,
+    F1        = f1
+  )
+})
+metrics_df <- bind_rows(metrics_list)
+
+metrics_long <- metrics_df %>%
+  pivot_longer(cols = c("Precision", "Recall", "F1"),
+               names_to = "Metric",
+               values_to = "Value")
+
+ggplot(metrics_long, aes(x = Class, y = Value, fill = Metric)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  scale_y_continuous(
+    labels = scales::percent_format(accuracy = 1),
+    limits = c(0, 1)
+  ) +
+  scale_fill_brewer(palette = "Set1") +
+  labs(
+    title = "Per-Class Precision, Recall, and F1 (Test Set)",
+    x = "Sentiment Class",
+    y = "Score"
+  ) +
+  theme_minimal()
+
+```
+
+#4.8 Distrubtion of true & predicted sentiment of the test set (in bar chart)
+
+```{r}
+
+true_df <- data.frame(Label = test_labels, Type = "True")
+
+pred_df <- data.frame(Label = pred_test,   Type = "Predicted")
+
+dist_df <- rbind(true_df, pred_df)
+
+ggplot(dist_df, aes(x = Label, fill = Type)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("True" = "#3182bd", "Predicted" = "#e6550d")) +
+  labs(
+    title = "Distribution of True vs Predicted Sentiment (Test Set)",
+    x = "Sentiment Class",
+    y = "Count",
+    fill = NULL
+  ) +
+  theme_minimal()
+
+```
