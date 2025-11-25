@@ -22,22 +22,56 @@ Changes in sea temperature is also having an impact on the fisheries sector, the
 
 Public discussion on climate change has also been increasing year by year. The relentless occurrence of extreme weather phenomena across the globe has already captured the attention of many. Social media, as a platform for disseminating public opinion, is favoured by many for its widespread reach and accessibility.Therefore, analysing social media commentary can help us understand current trends in public opinion and observe how climate change is perceived by the public.
 
-
 ## Methodology
 
-A dataset from Kaggle, entitled with “twitter_sentiment_data.csv”, is employed to conduct this research. This dataset comprises three columns: “sentiment score”, “message”, and “tweet_id”. The entire dataset contains 43,943 records, which recorded comments and messages releated to climate change from Apr 2015 - Feb 2018. All messages were labelled. 
+A dataset from __Kaggle__, entitled with __'twitter_sentiment_data.csv'__, is employed to conduct this research. This dataset comprises three columns: __'sentiment score”, 'message'__, and __'tweet_id'__. The entire dataset contains __43,943__ records, which recorded comments and messages releated to climate change from __Apr 2015 - Feb 2018__. All messages were labelled. 
 
 ![](image/image.png)
 
 ![](image/image11.jpg)
-Moreover, R would be used in this research (of course!) , and sentiment analysis will be conducted in this research. Apart from the basic libraries such as (ggplot2) / (tidyverse) / (lubridate)
-, etc., specific libraries such as (wordcloud) / (caret) / (e1071), etc., would be imported for word clouds generation and prediction based on the dataset. 
+Moreover, __R__ would be used in this research (of course!) , and sentiment analysis will be conducted in this research. Apart from the basic libraries such as __(ggplot2) / (tidyverse) / (lubridate)__,etc., specific libraries such as __(wordcloud) / (caret) / (e1071)__, etc., would be imported for word clouds generation and prediction based on the dataset. 
 
 ![](image/image4.png)
 
 ## Results
 
+__Dataset Information__
 
+![](image/data1.png)
+
+As shown in the above graph, the avearge sentiment score for the whole dataset is __= 0.8539__. While the element of columns and 'tweet_id' are not important and useful in our dataset, the furthur research will ignore these results.
+
+![](image/data2.png)
+
+After data cleaning process, two colomuns are confirmed to be used for furthur research: __'message'__ and __'sentiment'.__ All results produced afterwards are all constructed based on data from these colomuns.
+
+#
+
+__Word Clouds__
+
+![](image/data3.png)
+
+All word clouds below contain common terms including __'climate', 'change', 'global' and 'rt' (realtime).__
+
+Within the word cloud concerning media, we can observe that terms related to media __('film','documentary')__ and actors __('leonardo','dicaprio')__ are particularly prominent, reflecting how the media appears to play a particularly significant role in shaping public perceptions of climate change.
+
+In the non-media classification section, terms such as __'trump', 'government'__,  and __'science'__ also frequently appear, reflecting widespread agreement that scientific progress and the views of political leaders play a decisive role in addressing climate change issues.
+
+![](image/data4.png)
+
+In light of this, further research into both politics and science is warranted. Analysis revealed that words such as __'scientists', 'study',__ and __'data'__ appeared with high frequency in the word cloud of scientific classifications. This reflects that when examining matters concerning climate change, people tend to require empirical evidence before they are persuaded.
+
+On the other hand, within the political classification, terms such as 'trump', 'president', and 'Republican' reappeared. This may be linked to the previous radical statements and actions taken by US President Trump regarding climate change matters.
+
+![](image/data5.png)
+
+The study also analysed public attitudes towards climate change. Those holding positive views believe that promoting effective policies can break the current deadlock on climate change __('policy', 'solution', 'regulation')__. More pessimistic individuals contend that climate change may ultimately lead to unprecedented disasters on Earth __('flood', 'crisis', 'extinction')__.
+
+#
+
+__Sentiment Prediction__
+
+Whilst presenting current public discourse through word clouds, the study also endeavours to construct a __Document-Term Matrix (DTM)__ based on the dataset. It further employs the __Naive Bayes algorithm__ to forecast potential future public opinions regarding climate change.
 
 ## Conclusion
 
