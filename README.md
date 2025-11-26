@@ -21,7 +21,7 @@ Changes in sea temperature is also having an impact on the fisheries sector, the
 
 ![](image/image3.png)
 
-Public discussion on climate change has also been increasing year by year. The relentless occurrence of extreme weather phenomena across the globe has already captured the attention of many. Social media, as a platform for disseminating public opinion, is favoured by many for its widespread reach and accessibility.Therefore, analysing social media commentary can help us understand current trends in public opinion and observe how climate change is perceived by the public.
+Public discussion on climate change has also been increasing year by year. The relentless occurrence of extreme weather phenomena across the globe has already captured the attention of many. Social media, as a platform for disseminating public opinion, is favoured by many for its widespread reach and accessibility. Therefore, analysing social media commentary can help us understand current trends in public opinion and observe how climate change is perceived by the public.
 
 __Research Question:__ What opinions and attitudes have been expressed by the public on social media regarding contemporary climate change over the past decade? And how might public sentiment on this issue evolve in the future?
 
