@@ -80,9 +80,27 @@ The study also analysed public attitudes towards climate change. Those holding p
 
 __Sentiment Prediction__
 
-Whilst presenting current public discourse through word clouds, the study also endeavours to construct a __Document-Term Matrix (DTM)__ based on the dataset. It further employs the __Naive Bayes algorithm__ to forecast potential future public opinions regarding climate change.
+Whilst presenting current public discourse through word clouds, the study also endeavours to construct a __Document-Term Matrix (DTM)__ based on the dataset. It further employs the __Naive Bayes algorithm__ to forecast potential future public opinions regarding climate change. All data below will be rounded to three decimal places.
 
+![](image/data6.png)
 
+After creating the DTM via R, the model directly utilised it to perform Naive Bayes predictions. The results revealed that the prediction accuracy for sentiment = 1 (positive) was highest, at __0.523__.
+
+![](image/data7.png)
+
+The model simultaneously conducts a preliminary assessment of specific keywords within the word cloud, attempting to predict the impact of a given term on overall sentiment. Taking one of the most representative words as an example __(‘global’)__, we observe that this term carries a more negative connotation __(sentiment score = -1, 0.502 in the test set and -0.552 in the training set)__. The results reflect a considerable degree of concern among people regarding the current state of the planet.
+
+![](image/data8.png)
+
+![](image/data9.png)
+
+We also employed the model to generate a confusion matrix. We observe that although sentiment scores 1 and 2 occasionally exhibit confusion __(2,264 true 2s predicted as 1)__, overall these two groups demonstrate the highest predictive accuracy and most faithfully represent the sentiment of the dataset. Conversely, the accuracy for negative and neutral __(-1, 0)__ scores is comparatively lower.
+
+![](image/data10.png)
+
+![](image/data11.png)
+
+However, the final data reported by the model reveals that the accuracy of predictions based on sentiment analysis is relatively low. The overall accuracy is only __0.385 (test = 0.375, training = 0.395)__. On the other hand, the No information rate is as high as __0.523__, while the Kappa value __(0.183)__ and P-value __(~0)__ indicate limited reliability and performance. Concurrently, the predictive performance of Class 2 (sentiment value = 2) also surpassed that of the other three groups, indicating a bias within the predictive model.
 
 ## Conclusion
 
