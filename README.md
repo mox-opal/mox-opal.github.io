@@ -1,9 +1,10 @@
 ![](image/Title.png)
 ## Table of contents
 [1. Introduction](#introduction)<br>
-[2. Methodology](#methodology)<br>
-[3. Results](#results)<br>
-[4. Conclusion](#conclusion)<br>
+[2. Litearture Review](#litearture-review)<br>
+[3. Methodology](#methodology)<br>
+[4. Results](#results)<br>
+[5. Conclusion](#conclusion)<br>
 
 ## Introduction
 The earth's average temperature increases due to compression of gases in the atmosphere that trap the sun's heat. This is caused by human activities such as the use of motorized vehicles, burning fuel, deforestation and industrial activities. This causes the earth's temperature to continue to rise, the weather is unpredictable, and several aspects of human life are affected, including the environment, health and the economy.
@@ -21,6 +22,14 @@ Changes in sea temperature is also having an impact on the fisheries sector, the
 ![](image/image3.png)
 
 Public discussion on climate change has also been increasing year by year. The relentless occurrence of extreme weather phenomena across the globe has already captured the attention of many. Social media, as a platform for disseminating public opinion, is favoured by many for its widespread reach and accessibility.Therefore, analysing social media commentary can help us understand current trends in public opinion and observe how climate change is perceived by the public.
+
+__Research Question:__ What opinions and attitudes have been expressed by the public on social media regarding contemporary climate change over the past decade? And how might public sentiment on this issue evolve in the future?
+
+## Litearture Review
+
+Yale University conducted a quantitative study in the recent past. Large majorities in most surveyed countries say climate change is happening and is caused by humans. However, due to varying levels of awareness regarding individual and national responsibilities, acceptance of locally implemented climate change measures differs across nations. The majority express strong support for renewable energy expansion and climate policies, and nations and populations already experiencing the impacts of climate change demonstrate heightened focus and more urgent crisis response measures. 
+
+On the other hand, almost all individuals concur that climate change constitutes an undeniable crisis, and acknowledge that within the foreseeable future, it holds the potential to inflict devastating consequences upon our planet. Some even contend that the primary cause of climate change lies entirely with human activity, encompassing excessive development, resource extraction, and ineffective policy formulation.
 
 ## Methodology
 
@@ -73,9 +82,13 @@ __Sentiment Prediction__
 
 Whilst presenting current public discourse through word clouds, the study also endeavours to construct a __Document-Term Matrix (DTM)__ based on the dataset. It further employs the __Naive Bayes algorithm__ to forecast potential future public opinions regarding climate change.
 
+
+
 ## Conclusion
 
-Most people agree that climate change is occurring. The opinions and actions of powerful entities—such as national leaders and international organisations—exert a significant influence on climate change. The study analysed comments across four distinct dimensions, consistently revealing the public's high reliance on external sources of information (such as “website” in media discourse, “study” in scientific discourse, and “president” in political discourse). This demonstrates that for the public to comprehend the realities of climate change, the ability to discern misinformation is particularly crucial.
+Most people agree that climate change is occurring. The opinions and actions of powerful entities—such as national leaders and international organisations—exert a significant influence on climate change. The study analysed comments across four distinct dimensions, consistently revealing the public's high reliance on external sources of information (such as “website” in media discourse, “study” in scientific discourse, and “president” in political discourse). This demonstrates that for the public to comprehend the realities of climate change, the ability to discern misinfo rmation is particularly crucial.
 
 In terms of prediction using sentiments, the model's figures (low accuracy) indicate that emotions prove difficult to serve as an effective predictive factor for gauging people's future stance on a given matter. Concurrently, the model exhibits a greater bias towards analysing messages with sentiment scores = 2, indicating that climate change-related messages supported by verifiable evidence enable more precise analysis of shifts in public awareness concerning climate change.
+
+However, the study lacks geographical data pertaining to the publication of reviews (such as time and location), and some reviews exhibit repetitive arguments, potentially obscuring the situation from being as clear as it appears upon examination. Besides, as an open platform, social media is highly susceptible to the emergence of opinion-shaping or biased discourse. Personal factors such as commentators' backgrounds also prove difficult to systematise. It is recommended that future research should simultaneously compare different platforms or refine research designs through varied sampling methodologies.
 
