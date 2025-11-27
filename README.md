@@ -38,16 +38,16 @@ Using word clouds across the dataset, you start to see four overlapping “world
 ![](image/data4.png)
 
 __- Media & celebrity climate discourse__ <br>
-Words like “film,” “documentary,” “leonardo,” “dicaprio” show just how strongly documentaries and celebrity advocates shape attention. Climate change here is seen through storytelling: big, emotional narratives, films, and viral clips driving awareness and urgency.
+Words like __“film,” “documentary,” “leonardo”__ show just how strongly documentaries and celebrity advocates shape attention. Climate change here is seen through storytelling: big, emotional narratives, films, and viral clips driving awareness and urgency.
 
 __- Non-media, everyday debate__ <br>
-In more general conversations, terms like “trump,” “government,” “science” pop out. People talk about climate change by talking about leadership, facts, and public policy. It’s less “is climate change real?” and more “why is our government ignoring the science?”
+In more general conversations, terms like __“trump,” “government,” “science”__ pop out. People talk about climate change by talking about leadership, facts, and public policy. It’s less “is climate change real?” and more “why is our government ignoring the science?”
 
 __- Science as anchor__ <br>
-Words such as “scientists,” “study,” “data” reveal an expectation that climate claims should be backed by evidence. People cite research, reports, and expert consensus. Science becomes a status marker: if you have “data” and “study” on your side, you’re seen as credible.
+Words such as __“scientists,” “study,” “data”__ reveal an expectation that climate claims should be backed by evidence. People cite research, reports, and expert consensus. Science becomes a status marker: if you have “data” and “study” on your side, you’re seen as credible.
 
 __- Politics as battleground__ <br>
-The political word cloud is predictable but intense: “trump,” “president,” “republican”. Climate change is deeply politicised, entangled with party identity and presidential rhetoric. Many conversations are less about CO₂ and more about what political allegiance says about your stance on reality itself.
+The political word cloud is predictable but intense: __“trump,” “president,” “republican”__. Climate change is deeply politicised, entangled with party identity and presidential rhetoric. Many conversations are less about CO₂ and more about what political allegiance says about your stance on reality itself.
 
 #
 
@@ -58,10 +58,10 @@ One of the most intriguing contrasts in the data is emotional tone:
 ![](image/data5.png)
 
 __On the hopeful side (Positive + Solutions):__ <br>
-Words like “policy,” “solution,” “regulation” signal that many people still believe in institutional fixes. There’s faith that strong policies, international agreements, and state action can shift the trajectory.
+Words like __“policy,” “solution,” “regulation”__ signal that many people still believe in institutional fixes. There’s faith that strong policies, international agreements, and state action can shift the trajectory.
 
 __On the doom side (Negative + Problems):__ <br>
-Words including “flood,” “crisis,” “extinction” indicate deep anxiety and a sense of looming catastrophe. Climate change isn’t a “future risk” in these tweets; it’s an unfolding emergency and an existential threat.
+Words including __“flood,” “crisis,” “extinction”__ indicate deep anxiety and a sense of looming catastrophe. Climate change isn’t a “future risk” in these tweets; it’s an unfolding emergency and an existential threat.
 
 Public opinion lives in the tension between these two: hope that something can be done, and fear that we are already too late.
 
