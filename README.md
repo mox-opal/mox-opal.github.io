@@ -115,6 +115,8 @@ Climate conversations are inseparable from politics. Who you trust, what media y
 __Emotion isn’t easily reduced to labels__ <br>
 This dataset’s sentiment labels (-1, 0, 1, 2) and a simple model are not enough to fully capture how people feel about climate change. Fear, anger, moral outrage, cautious optimism—these don’t fit neatly into four bins.
 
+![](image/image33.png)
+
 ## Why is this matter?
 
 Social media is messy, biased, and absolutely not a perfect proxy for “public opinion.” But it does act as a real-time, global focus group: a place where fears, hopes, and myths about climate change surface publicly.
