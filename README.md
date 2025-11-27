@@ -2,6 +2,7 @@
 
 ## Table of contents
 [1. Introduction](#introduction)<br>
+[2. Word clouds](#four-lenses-of-climate-discourse)<br>
 
 
 ## Introduction
@@ -10,7 +11,7 @@ What happens when you actually read tens of thousands of real conversations abou
 
 That’s what this project set out to explore: nearly 44,000 climate-related tweets (2015–2018), pre-labelled with sentiment, analysed with R to understand how people talk about climate change, who they blame or trust, and how hopeful or hopeless they sound.
 
-![](image/image3.png)
+<img src="image/image3.png" alt="description" width="300">
 
 __What people talk about when they talk about climate change__
 
@@ -28,9 +29,15 @@ Tweets consistently point the finger at overdevelopment, resource extraction, an
 
 #
 
-__Four lenses of climate discourse__
+## Four lenses of climate discourse
 
 Using word clouds across the dataset, you start to see four overlapping “worlds” of conversation:
+
+![](image/data3.png)
+
+![](image/data4.png)
+
+![](image/data5.png)
 
 __- Media & celebrity climate discourse__
 Words like “film,” “documentary,” “leonardo,” “dicaprio” show just how strongly documentaries and celebrity advocates shape attention. Climate change here is seen through storytelling: big, emotional narratives, films, and viral clips driving awareness and urgency.
